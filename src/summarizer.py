@@ -1,47 +1,30 @@
 import os
-from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
 
-# Load .env
-load_dotenv()
+# 🔥 TEMP: paste your API key directly here
+OPENROUTER_API_KEY = "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"
 
-OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
+if not OPENROUTER_API_KEY:
+    raise ValueError("API key missing")
 
 llm = ChatOpenAI(
     model="meta-llama/llama-3-8b-instruct",
-    openai_api_key=OPENROUTER_API_KEY,
-    openai_api_base="https://openrouter.ai/api/v1",
-    temperature=0.3,
+    api_key=OPENROUTER_API_KEY,
+    base_url="https://openrouter.ai/api/v1",
+    temperature=0.3
 )
 
 def summarize(docs):
-    text = "\n\n".join([d.page_content for d in docs])
+    try:
+        text = "\n".join([d.page_content for d in docs])
+    except:
+        text = "\n".join(docs)
 
     prompt = f"""
-You are a professional news analyst.
+    Summarize the following news clearly:
 
-Analyze the following news articles carefully and generate a high-quality summary.
-
-Instructions:
-- Remove duplicate or repetitive information
-- Focus on factual insights
-- Combine similar points
-- Keep it concise but informative
-
-Format:
-
-Key Points:
-- ...
-
-Trends:
-- ...
-
-Final Summary:
-...
-
-News:
-{text}
-"""
+    {text}
+    """
 
     response = llm.invoke(prompt)
     return response.content

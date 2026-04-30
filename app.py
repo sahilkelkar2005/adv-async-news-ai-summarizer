@@ -1,40 +1,24 @@
-from flask import Flask, render_template, request
-from src.news_fetcher import fetch_news
-from src.processor import split_texts
-from src.vector_store import create_db, search
+import streamlit as st
 from src.summarizer import summarize
 
-app = Flask(__name__)
+st.set_page_config(page_title="News AI Summarizer")
 
-vector_db = None
+st.title("📰 News AI Summarizer")
 
-@app.route("/", methods=["GET", "POST"])
-def home():
-    global vector_db
-    summary = None
-    results = []
+user_input = st.text_area("Enter news text:")
 
-    if request.method == "POST":
-        query = request.form.get("query")
+if st.button("Summarize"):
+    if user_input.strip():
+        class Doc:
+            def __init__(self, text):
+                self.page_content = text
 
-        # Fetch news
-        articles = fetch_news(query)
+        docs = [Doc(user_input)]
 
-        # convert to text for vector DB
-        texts = [article["title"] for article in articles]
+        with st.spinner("Summarizing..."):
+            result = summarize(docs)
 
-        chunks = split_texts(texts)
-
-        vector_db = create_db(chunks)
-
-        docs = search(vector_db, query)
-
-        results = articles  # for UI
-
-        summary = summarize(docs)
-
-    return render_template("index.html", results=results, summary=summary)
-
-
-if __name__ == "__main__":
-    app.run(debug=True)
+        st.subheader("Summary")
+        st.write(result)
+    else:
+        st.warning("Please enter some text.")

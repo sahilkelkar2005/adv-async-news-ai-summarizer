@@ -1,7 +1,5 @@
-flask
+streamlit
 langchain
-langchain-community
 langchain-openai
-faiss-cpu
-sentence-transformers
-feedparser
+python-dotenv
+openai
