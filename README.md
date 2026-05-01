@@ -10,7 +10,7 @@ This project demonstrates **advanced system design concepts** such as decoupled 
 👉 Add your Streamlit link here
 
 ```
-[https://your-streamlit-app-link](https://adv-async-news-ai-summarizer-bs6eupztdzbcccohwpdpnu.streamlit.app/)
+https://adv-async-news-ai-summarizer-bs6eupztdzbcccohwpdpnu.streamlit.app
 ```
 
 ---
